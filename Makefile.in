@@ -2255,6 +2255,7 @@ src_tests_sweeper_SOURCES = \
 
 src_tests_sweeper_LDADD = \
   src/compat/libcompat.la \
+  @LIBM@ \
   $(LIBSYN123) \
   $(LIBOUT123)
 
