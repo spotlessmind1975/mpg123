@@ -204,7 +204,12 @@ elseif(MACHINE STREQUAL "generic")
     set(PLATFORM_DEFINITIONS OPT_GENERIC)
 endif()
 
+read_mpg123_api_version(mpg123_soversion mpg123_version)
 set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME mpg123)
+set_target_properties(${TARGET} PROPERTIES PREFIX lib)
+set_target_properties(${TARGET} PROPERTIES SOVERSION ${mpg123_soversion})
+set_target_properties(${TARGET} PROPERTIES VERSION ${mpg123_version})
+set_target_properties(${TARGET} PROPERTIES DLL_NAME_WITH_SOVERSION TRUE)
 
 target_compile_definitions(${TARGET} PRIVATE
     $<$<BOOL:$<TARGET_PROPERTY:POSITION_INDEPENDENT_CODE>>:PIC>)
@@ -220,7 +225,7 @@ if(MSVC AND NOT CMAKE_C_COMPILER_ID STREQUAL "Clang" AND MACHINE MATCHES "x86|am
         get_filename_component(FILENAME ${FILE} NAME)
         add_custom_command(
             OUTPUT ${FILENAME}.asm
-            COMMAND ${CMAKE_C_COMPILER} /DASMALIGN_BALIGN ${PLATFORM_DEFINITIONS}
+            COMMAND ${CMAKE_C_COMPILER} /nologo /DASMALIGN_BALIGN ${PLATFORM_DEFINITIONS}
             /I"${PROJECT_SOURCE_DIR}/../../src" /I"${PROJECT_BINARY_DIR}/src" /P /Fi${FILENAME}.asm /Tc "${FILE}"
             DEPENDS ${FILE}
             WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
