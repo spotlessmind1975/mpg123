@@ -44,7 +44,7 @@ static char* w2upath(const wchar_t *wpath)
    \\?\ can be marked as a long one and still work. */
 static int wpath_need_elongation(wchar_t *wpath)
 {
-	if( wpath && !PathIsRelativeW(wpath)
+	if( wpath /*&& !PathIsRelativeW(wpath)*/
 	&&	wcslen(wpath) > MAX_PATH-1
 	&&	wcsncmp(L"\\\\?\\", wpath, 4) )
 		return 1;
@@ -64,9 +64,9 @@ static wchar_t* wlongpath(wchar_t *wpath)
 
 	/* Absolute paths that do not start with \\?\ get that prepended
 	   to allow them being long. */
-	if(!PathIsRelativeW(wpath) && wcsncmp(L"\\\\?\\", wpath, 4))
+	if(/*!PathIsRelativeW(wpath) &&*/ wcsncmp(L"\\\\?\\", wpath, 4))
 	{
-		if(wcslen(wpath) >= 2 && PathIsUNCW(wpath))
+		if(wcslen(wpath) >= 2 /*&& PathIsUNCW(wpath)*/)
 		{
 			/* \\server\path -> \\?\UNC\server\path */
 			prefix = L"\\\\?\\UNC";
